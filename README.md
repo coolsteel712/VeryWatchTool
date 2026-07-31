@@ -10,9 +10,7 @@ VeryWatchTool is currently in **Beta v0.2.5**. While most features are functiona
 
 ## Compiling Watch Faces
 
-VeryWatchTool can compile watch faces directly. If you need support for additional color formats, batch compilation, or advanced command-line/GUI workflows, check out **VeryLoad**:
-
-https://github.com/coolsteel712/VeryLoad/
+CloudDialMake can compile watch faces directly. If you need support for additional color formats or batch compilation, CloudDialMake is in the VeryWatchTool root folder.
 
 ## Sideloading Watch Faces
 
