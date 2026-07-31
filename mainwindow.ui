@@ -1,0 +1,1038 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>810</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>810</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>VeryWatchTool</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="4" column="1">
+     <widget class="QPushButton" name="pushButtonCreateIwfLz">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Build LZ-Compressed Watch Face (Experimental)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2" rowspan="9">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QGroupBox" name="groupBox_9">
+        <property name="title">
+         <string>iwf.json</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QPlainTextEdit" name="plainTextEdit">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="plainText">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_10">
+        <property name="title">
+         <string>font.json</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QPlainTextEdit" name="plainTextEdit_2">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="plainText">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonCreateIwfLz_6">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>New Project</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="pushButtonCreerPreview_2">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Create Preview Image</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QPushButton" name="pushButtonUploadBkground">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Upload Bkground Picture</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QPushButton" name="pushButtonCreateIwf">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Build Watch Face</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="0" rowspan="9">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>Model</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QComboBox" name="comboBox">
+           <item>
+            <property name="text">
+             <string>IDW13</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>IDW18</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>IDW20</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_8">
+        <property name="font">
+         <font>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="title">
+         <string>   New widget</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="1" column="0">
+          <widget class="QLabel" name="labelType_6">
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="widgetComboAdd_2"/>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QPushButton" name="pushButtonAjouterWidget_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Add Widget</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="typeComboAdd_2"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelWidget_6">
+           <property name="text">
+            <string>Widget</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_7">
+        <property name="title">
+         <string>   Current widget</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="2" colspan="3">
+          <widget class="QComboBox" name="currentWidgetCombo_2">
+           <property name="modelColumn">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2" colspan="3">
+          <widget class="QComboBox" name="currentTypeCombo_2"/>
+         </item>
+         <item row="4" column="3">
+          <widget class="QLabel" name="labelW_2">
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>W</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="2">
+          <widget class="QLabel" name="labelWidget_5">
+           <property name="text">
+            <string>Widget</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="4">
+          <widget class="QSpinBox" name="hSpin_2">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximum">
+            <number>385</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QLabel" name="labelType_5">
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="5">
+          <widget class="QPushButton" name="pushButtonSupprimerWidget_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Remove Widget</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="3">
+          <widget class="QLabel" name="labelH_2">
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>H</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0" colspan="5">
+          <widget class="QScrollArea" name="scrollArea">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>239</width>
+              <height>1272</height>
+             </rect>
+            </property>
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="10" column="1">
+              <widget class="QLineEdit" name="lineEdit_11"/>
+             </item>
+             <item row="25" column="1">
+              <widget class="QLineEdit" name="lineEdit_25"/>
+             </item>
+             <item row="29" column="0">
+              <widget class="QCheckBox" name="checkBox_33">
+               <property name="text">
+                <string>ringedge</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QCheckBox" name="checkBox_6">
+               <property name="text">
+                <string>bg</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLineEdit" name="lineEdit_48"/>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLineEdit" name="lineEdit_49"/>
+             </item>
+             <item row="22" column="0">
+              <widget class="QCheckBox" name="checkBox_24">
+               <property name="text">
+                <string>pcenterx</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QCheckBox" name="checkBox_10">
+               <property name="text">
+                <string>target</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="QLineEdit" name="lineEdit_50"/>
+             </item>
+             <item row="37" column="0">
+              <widget class="QCheckBox" name="checkBox_43">
+               <property name="text">
+                <string>mincentery</string>
+               </property>
+              </widget>
+             </item>
+             <item row="38" column="0">
+              <widget class="QCheckBox" name="checkBox_42">
+               <property name="text">
+                <string>minanchorx</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLineEdit" name="lineEdit_8"/>
+             </item>
+             <item row="26" column="0">
+              <widget class="QCheckBox" name="checkBox_28">
+               <property name="text">
+                <string>content</string>
+               </property>
+              </widget>
+             </item>
+             <item row="42" column="1">
+              <widget class="QLineEdit" name="lineEdit_43"/>
+             </item>
+             <item row="19" column="0">
+              <widget class="QCheckBox" name="checkBox_21">
+               <property name="text">
+                <string>app</string>
+               </property>
+              </widget>
+             </item>
+             <item row="26" column="1">
+              <widget class="QLineEdit" name="lineEdit_26"/>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkBox_2">
+               <property name="text">
+                <string>fgcolor</string>
+               </property>
+              </widget>
+             </item>
+             <item row="19" column="1">
+              <widget class="QLineEdit" name="lineEdit_19"/>
+             </item>
+             <item row="35" column="0">
+              <widget class="QCheckBox" name="checkBox_41">
+               <property name="text">
+                <string>minute</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="0">
+              <widget class="QCheckBox" name="checkBox_12">
+               <property name="text">
+                <string>fontnum</string>
+               </property>
+              </widget>
+             </item>
+             <item row="28" column="1">
+              <widget class="QLineEdit" name="lineEdit_28"/>
+             </item>
+             <item row="37" column="1">
+              <widget class="QLineEdit" name="lineEdit_42"/>
+             </item>
+             <item row="18" column="0">
+              <widget class="QCheckBox" name="checkBox_20">
+               <property name="text">
+                <string>animaformat</string>
+               </property>
+              </widget>
+             </item>
+             <item row="23" column="1">
+              <widget class="QLineEdit" name="lineEdit_22"/>
+             </item>
+             <item row="20" column="1">
+              <widget class="QLineEdit" name="lineEdit_20"/>
+             </item>
+             <item row="18" column="1">
+              <widget class="QLineEdit" name="lineEdit_18"/>
+             </item>
+             <item row="35" column="1">
+              <widget class="QLineEdit" name="lineEdit_38"/>
+             </item>
+             <item row="43" column="0">
+              <widget class="QCheckBox" name="checkBox_48">
+               <property name="text">
+                <string>houranchorx</string>
+               </property>
+              </widget>
+             </item>
+             <item row="31" column="0">
+              <widget class="QCheckBox" name="checkBox_36">
+               <property name="text">
+                <string>seccenterx</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QCheckBox" name="checkBox_8">
+               <property name="text">
+                <string>style</string>
+               </property>
+              </widget>
+             </item>
+             <item row="42" column="0">
+              <widget class="QCheckBox" name="checkBox_49">
+               <property name="text">
+                <string>hourcentery</string>
+               </property>
+              </widget>
+             </item>
+             <item row="24" column="1">
+              <widget class="QLineEdit" name="lineEdit_24"/>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="lineEdit_7"/>
+             </item>
+             <item row="21" column="1">
+              <widget class="QLineEdit" name="lineEdit_21"/>
+             </item>
+             <item row="29" column="1">
+              <widget class="QLineEdit" name="lineEdit_31"/>
+             </item>
+             <item row="39" column="0">
+              <widget class="QCheckBox" name="checkBox_44">
+               <property name="text">
+                <string>minanchory</string>
+               </property>
+              </widget>
+             </item>
+             <item row="20" column="0">
+              <widget class="QCheckBox" name="checkBox_22">
+               <property name="text">
+                <string>panchorx</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="lineEdit_4"/>
+             </item>
+             <item row="12" column="1">
+              <widget class="QLineEdit" name="lineEdit_13"/>
+             </item>
+             <item row="34" column="0">
+              <widget class="QCheckBox" name="checkBox_39">
+               <property name="text">
+                <string>secanchory</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="1">
+              <widget class="QLineEdit" name="lineEdit_12"/>
+             </item>
+             <item row="12" column="0">
+              <widget class="QCheckBox" name="checkBox_14">
+               <property name="text">
+                <string>time</string>
+               </property>
+              </widget>
+             </item>
+             <item row="30" column="1">
+              <widget class="QLineEdit" name="lineEdit_33"/>
+             </item>
+             <item row="31" column="1">
+              <widget class="QLineEdit" name="lineEdit_34"/>
+             </item>
+             <item row="39" column="1">
+              <widget class="QLineEdit" name="lineEdit_40"/>
+             </item>
+             <item row="22" column="1">
+              <widget class="QLineEdit" name="lineEdit_23"/>
+             </item>
+             <item row="24" column="0">
+              <widget class="QCheckBox" name="checkBox_27">
+               <property name="text">
+                <string>startangle</string>
+               </property>
+              </widget>
+             </item>
+             <item row="25" column="0">
+              <widget class="QCheckBox" name="checkBox_26">
+               <property name="text">
+                <string>endangle</string>
+               </property>
+              </widget>
+             </item>
+             <item row="30" column="0">
+              <widget class="QCheckBox" name="checkBox_35">
+               <property name="text">
+                <string>second</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="lineEdit_6"/>
+             </item>
+             <item row="40" column="1">
+              <widget class="QLineEdit" name="lineEdit_46"/>
+             </item>
+             <item row="27" column="0">
+              <widget class="QCheckBox" name="checkBox_29">
+               <property name="text">
+                <string>direction</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0">
+              <widget class="QCheckBox" name="checkBox_11">
+               <property name="text">
+                <string>font</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QCheckBox" name="checkBox_9">
+               <property name="text">
+                <string>follow</string>
+               </property>
+              </widget>
+             </item>
+             <item row="44" column="0">
+              <widget class="QCheckBox" name="checkBox_47">
+               <property name="text">
+                <string>houranchory</string>
+               </property>
+              </widget>
+             </item>
+             <item row="33" column="0">
+              <widget class="QCheckBox" name="checkBox_38">
+               <property name="text">
+                <string>secanchorx</string>
+               </property>
+              </widget>
+             </item>
+             <item row="32" column="0">
+              <widget class="QCheckBox" name="checkBox_37">
+               <property name="text">
+                <string>seccentery</string>
+               </property>
+              </widget>
+             </item>
+             <item row="23" column="0">
+              <widget class="QCheckBox" name="checkBox_25">
+               <property name="text">
+                <string>pcentery</string>
+               </property>
+              </widget>
+             </item>
+             <item row="36" column="0">
+              <widget class="QCheckBox" name="checkBox_40">
+               <property name="text">
+                <string>mincenterx</string>
+               </property>
+              </widget>
+             </item>
+             <item row="38" column="1">
+              <widget class="QLineEdit" name="lineEdit_41"/>
+             </item>
+             <item row="13" column="0">
+              <widget class="QCheckBox" name="checkBox_15">
+               <property name="text">
+                <string>turn</string>
+               </property>
+              </widget>
+             </item>
+             <item row="21" column="0">
+              <widget class="QCheckBox" name="checkBox_23">
+               <property name="text">
+                <string>panchory</string>
+               </property>
+              </widget>
+             </item>
+             <item row="41" column="1">
+              <widget class="QLineEdit" name="lineEdit_45"/>
+             </item>
+             <item row="27" column="1">
+              <widget class="QLineEdit" name="lineEdit_27"/>
+             </item>
+             <item row="41" column="0">
+              <widget class="QCheckBox" name="checkBox_45">
+               <property name="text">
+                <string>hourcenterx</string>
+               </property>
+              </widget>
+             </item>
+             <item row="44" column="1">
+              <widget class="QLineEdit" name="lineEdit_44"/>
+             </item>
+             <item row="32" column="1">
+              <widget class="QLineEdit" name="lineEdit_35"/>
+             </item>
+             <item row="15" column="0">
+              <widget class="QCheckBox" name="checkBox_17">
+               <property name="text">
+                <string>animaicon</string>
+               </property>
+              </widget>
+             </item>
+             <item row="17" column="0">
+              <widget class="QCheckBox" name="checkBox_19">
+               <property name="text">
+                <string>animabpp</string>
+               </property>
+              </widget>
+             </item>
+             <item row="33" column="1">
+              <widget class="QLineEdit" name="lineEdit_36"/>
+             </item>
+             <item row="43" column="1">
+              <widget class="QLineEdit" name="lineEdit_47"/>
+             </item>
+             <item row="13" column="1">
+              <widget class="QLineEdit" name="lineEdit_14"/>
+             </item>
+             <item row="16" column="0">
+              <widget class="QCheckBox" name="checkBox_18">
+               <property name="text">
+                <string>frame</string>
+               </property>
+              </widget>
+             </item>
+             <item row="40" column="0">
+              <widget class="QCheckBox" name="checkBox_46">
+               <property name="text">
+                <string>hour</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="1">
+              <widget class="QLineEdit" name="lineEdit_51"/>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="lineEdit_5"/>
+             </item>
+             <item row="34" column="1">
+              <widget class="QLineEdit" name="lineEdit_37"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QCheckBox" name="checkBox_7">
+               <property name="text">
+                <string>align</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <widget class="QLineEdit" name="lineEdit_10"/>
+             </item>
+             <item row="14" column="0">
+              <widget class="QCheckBox" name="checkBox_16">
+               <property name="text">
+                <string>animatype</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="1">
+              <widget class="QLineEdit" name="lineEdit_15"/>
+             </item>
+             <item row="16" column="1">
+              <widget class="QLineEdit" name="lineEdit_16"/>
+             </item>
+             <item row="28" column="0">
+              <widget class="QCheckBox" name="checkBox_30">
+               <property name="text">
+                <string>pointer</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="checkBox_3">
+               <property name="text">
+                <string>bgcolor</string>
+               </property>
+              </widget>
+             </item>
+             <item row="36" column="1">
+              <widget class="QLineEdit" name="lineEdit_39"/>
+             </item>
+             <item row="11" column="0">
+              <widget class="QCheckBox" name="checkBox_13">
+               <property name="text">
+                <string>numwidth</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QCheckBox" name="checkBox_5">
+               <property name="text">
+                <string>bgrender</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="checkBox_4">
+               <property name="text">
+                <string>fgrender</string>
+               </property>
+              </widget>
+             </item>
+             <item row="17" column="1">
+              <widget class="QLineEdit" name="lineEdit_17"/>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLineEdit" name="lineEdit_9"/>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item row="4" column="4">
+          <widget class="QSpinBox" name="wSpin_2">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximum">
+            <number>320</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="5">
+          <widget class="QPushButton" name="pushButtonAppliquer_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Update Changes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="labelY_2">
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Y</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1" colspan="2">
+          <widget class="QSpinBox" name="xSpin_2">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximum">
+            <number>320</number>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1" colspan="2">
+          <widget class="QSpinBox" name="ySpin_2">
+           <property name="minimumSize">
+            <size>
+             <width>75</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximum">
+            <number>385</number>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="labelX_2">
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>X</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="6" column="1">
+     <widget class="QPushButton" name="pushButtonEditBkgroundPic">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Open Bkground Corner Matcher</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGraphicsView" name="graphicsView">
+      <property name="minimumSize">
+       <size>
+        <width>550</width>
+        <height>550</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>550</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1200</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_iwf_json"/>
+    <addaction name="actionSave_iwf_json"/>
+    <addaction name="actionSave_font_json"/>
+    <addaction name="actionCreate_zip"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionShow_Log_Output"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen_iwf_json">
+   <property name="text">
+    <string>Open iwf.json</string>
+   </property>
+  </action>
+  <action name="actionSave_iwf_json">
+   <property name="text">
+    <string>Save iwf.json</string>
+   </property>
+  </action>
+  <action name="actionSave_font_json">
+   <property name="text">
+    <string>Save font.json</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionBitmap_Editor">
+   <property name="text">
+    <string>Bitmap Editor</string>
+   </property>
+  </action>
+  <action name="actionInfo_of_iwf_json">
+   <property name="text">
+    <string>Info of iwf.json</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionCreate_zip">
+   <property name="text">
+    <string>Create .zip</string>
+   </property>
+  </action>
+  <action name="actionShow_Log_Output">
+   <property name="text">
+    <string>Show Log Output</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
