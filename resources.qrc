@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/images">
-        <file>border.png</file>
         <file>wrench.png</file>
     </qresource>
 </RCC>
