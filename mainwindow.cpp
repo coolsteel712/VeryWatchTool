@@ -2,6 +2,8 @@
 #include "dialogiwflz.h"
 #include "ui_mainwindow.h"
 
+#include "about.h"
+
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QJsonDocument>
@@ -202,7 +204,6 @@ MainWindow::MainWindow(QWidget *parent)
     populateWidgetComboAdd();
 
     // Buttons
-    connect(ui->pushButtonEditBkgroundPic,  &QPushButton::clicked, this, &MainWindow::pushButtonEditBkgroundPic);
     connect(ui->pushButtonUploadBkground,   &QPushButton::clicked, this, &MainWindow::onUploadBkgroundImg);
     connect(ui->pushButtonCreateIwfLz_6,    &QPushButton::clicked, this, &MainWindow::onNewProject);
     connect(ui->pushButtonAjouterWidget_2,  &QPushButton::clicked, this, &MainWindow::onAddWidget);
@@ -234,11 +235,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::on_actionAbout_triggered()
+{
+    about dialog(this); // Modal dialog bound to App_Window as parent
+    dialog.exec();             // Displays dialog modally
+}
+
 void MainWindow::initDeviceConfigs()
 {
     deviceConfigs["IDW13"] = {
         "IDW13", "IDW13", 240, 284, 120, 142, 174, 196, 31,
-        QColor(37, 37, 37), 2, 168, 194, 0.97
+        QColor(37, 37, 37), 2, 168, 194, 1.0
+    };
+
+    deviceConfigs["IDW17"] = {
+        "IDW17", "IDW17", 240, 296, 120, 148, 174, 196, 38,
+        QColor(37, 37, 37), 2, 156, 192, 0.97
     };
 
     deviceConfigs["IDW18"] = {
@@ -250,8 +262,12 @@ void MainWindow::initDeviceConfigs()
         "IDW20", "IDW20", 320, 385, 160, 193, 272, 324, 67,
         QColor(128, 128, 128), 3, 268, 320, 0.95
     };
-}
 
+    deviceConfigs["ID208BT"] = {
+        "ID208BT", "ID208BT", 240, 280, 120, 140, 174, 196, 31,
+        QColor(37, 37, 37), 2, 166, 194, 0.98
+    };
+}
 
 void MainWindow::applyDeviceConfig(const QString &modelName)
 {
@@ -290,7 +306,6 @@ void MainWindow::setProjectControlsEnabled(bool enabled)
     ui->hSpin_2->setEnabled(enabled);
 
     ui->pushButtonUploadBkground->setEnabled(enabled);
-    ui->pushButtonEditBkgroundPic->setEnabled(enabled);
     ui->pushButtonCreerPreview_2->setEnabled(enabled);
 }
 
@@ -1215,14 +1230,20 @@ void MainWindow::onSaveFontJson()
 //
 // Output canvas: 272 × 324 px, black background.
 // Layer order (back → front):
-//   1. Black fill                         — 272×324, full size
-//   2. Watch face (graphicsView scene)    — scaled to 0.97× of output, centred
-//   3. border.png (:/images/border.png)   — 1× scale (272×324), composited on top
+//   1. Black fill
+//   2. Watch face (graphicsView scene)
+//   3. Borders
 //
 void MainWindow::onSavePreview()
 {
     if (!projectOpen) {
         QMessageBox::warning(this, "No Project", "Please create a project first.");
+        return;
+    }
+
+    QGraphicsScene *scene = ui->graphicsView ? ui->graphicsView->scene() : nullptr;
+    if (!scene) {
+        QMessageBox::critical(this, "Error", "No valid graphics scene found.");
         return;
     }
 
@@ -1238,48 +1259,53 @@ void MainWindow::onSavePreview()
         }
     }
 
-    // ── Temporarily hide the redpoint widgets ──────────────────────────────────
+    // ── Temporarily hide redpoint widgets ──────────────────────────────────────
     for (QGraphicsItem *item : redpointItems) {
         item->hide();
     }
 
-    // ── Temporarily hide the yellow highlight ─────────────────────────────────
-    bool highlightWasVisible = (selectionHighlight != nullptr);
-    if (highlightWasVisible) {
+    // ── Temporarily hide yellow highlight ──────────────────────────────────────
+    bool highlightWasVisible = (selectionHighlight != nullptr && selectionHighlight->isVisible());
+    if (selectionHighlight) {
         selectionHighlight->hide();
     }
 
-    // 1. Render scene on an opaque base (Format_RGB888)
-    QGraphicsScene *scene = ui->graphicsView->scene();
-    QImage sceneImg(currentDevice.canvasW, currentDevice.canvasH, QImage::Format_RGB888);
-    sceneImg.fill(Qt::black);
+    // ── 1. Render Scene into Canvas Image ──────────────────────────────────────
+    QImage sceneImg(currentDevice.canvasW, currentDevice.canvasH, QImage::Format_ARGB32);
+    sceneImg.fill(Qt::transparent);
+
     {
-        QPainter sp(&sceneImg);
-        sp.setRenderHint(QPainter::SmoothPixmapTransform);
-        sp.setRenderHint(QPainter::Antialiasing);
-        scene->render(&sp, QRectF(0, 0, currentDevice.canvasW, currentDevice.canvasH), scene->sceneRect());
+        QPainter scenePainter(&sceneImg);
+        scenePainter.setRenderHint(QPainter::Antialiasing);
+        scenePainter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+        // Lock rendering viewport to explicit canvas rect (0,0, canvasW, canvasH)
+        QRectF canvasRect(0, 0, currentDevice.canvasW, currentDevice.canvasH);
+        scene->render(&scenePainter, canvasRect, canvasRect);
     }
 
-    // ── Restore the yellow highlight ─────────────────────────────────────────
-    if (highlightWasVisible) {
+    // ── Restore UI Elements ───────────────────────────────────────────────────
+    if (highlightWasVisible && selectionHighlight) {
         selectionHighlight->show();
     }
-
-    // ── Restore the redpoint widgets ──────────────────────────────────────────
     for (QGraphicsItem *item : redpointItems) {
         item->show();
     }
 
-    // 2. Scale scene according to previewScale
-    int scaledW = qRound(OUT_W * SCALE);
-    int scaledH = qRound(OUT_H * SCALE);
+    // ── 2. Scale scene according to previewScale ──
+    double fitScale = std::min(static_cast<double>(OUT_W) / currentDevice.canvasW,
+                               static_cast<double>(OUT_H) / currentDevice.canvasH) * SCALE;
+
+    int scaledW = qRound(currentDevice.canvasW * fitScale);
+    int scaledH = qRound(currentDevice.canvasH * fitScale);
+
     QImage scaledScene = sceneImg.scaled(scaledW, scaledH,
                                          Qt::IgnoreAspectRatio,
                                          Qt::SmoothTransformation);
 
-    // 3. Composite fully opaque final preview (Format_RGB888)
+    // ── 3. Composite fully opaque final preview (Format_RGB888) ───────────────
     QImage final(OUT_W, OUT_H, QImage::Format_RGB888);
-    final.fill(Qt::black); // Opaque background instead of Qt::transparent
+    final.fill(Qt::black);
 
     QPainter p(&final);
     p.setRenderHint(QPainter::Antialiasing);
@@ -1293,9 +1319,9 @@ void MainWindow::onSavePreview()
     p.setClipPath(clipPath);
     p.fillRect(0, 0, OUT_W, OUT_H, Qt::black);
 
-    // Center scaled canvas within preview view
-    int offX = (OUT_W - scaledW) / 2;
-    int offY = (OUT_H - scaledH) / 2;
+    // Center scaled canvas within preview view using actual rendered size
+    int offX = (OUT_W - scaledScene.width()) / 2;
+    int offY = (OUT_H - scaledScene.height()) / 2;
     p.drawImage(offX, offY, scaledScene);
 
     // Remove clipping mask to draw outer border cleanly
@@ -1318,7 +1344,7 @@ void MainWindow::onSavePreview()
                       currentDevice.previewCornerRadius);
     p.end();
 
-    // ── 4. Save to project directory as preview.png ──────────────────────────
+    // ── 4. Save to project directory as preview.png ───────────────────────────
     QString outPath = projectDir + "/preview.png";
     if (!final.save(outPath, "PNG")) {
         QMessageBox::critical(this, "Error",
@@ -1329,7 +1355,6 @@ void MainWindow::onSavePreview()
     QMessageBox::information(this, "Saved",
                              "Successfully saved preview to \"" + projectDir + "\"");
 }
-
 // ─── Yellow selection highlight ───────────────────────────────────────────────
 // Draws a 2px yellow rectangle over the selected widget's w×h bounding box.
 // Watch widgets use the full 320×385 scene area.

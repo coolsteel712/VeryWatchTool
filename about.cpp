@@ -12,3 +12,7 @@ about::~about()
 {
     delete ui;
 }
+
+void about::on_pushButton_clicked() {
+    this->close();
+}

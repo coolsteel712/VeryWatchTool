@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>810</height>
+    <height>768</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>1200</width>
-    <height>810</height>
+    <height>768</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -27,33 +27,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <item row="4" column="1">
-     <widget class="QPushButton" name="pushButtonCreateIwfLz">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>550</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Build LZ-Compressed Watch Face (Experimental)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Orientation::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2" rowspan="9">
+    <item row="0" column="2" rowspan="8">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QGroupBox" name="groupBox_9">
@@ -114,41 +88,39 @@
       </item>
      </layout>
     </item>
-    <item row="2" column="1">
-     <widget class="QPushButton" name="pushButtonCreerPreview_2">
-      <property name="minimumSize">
+    <item row="7" column="1">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
        <size>
-        <width>0</width>
-        <height>30</height>
+        <width>20</width>
+        <height>40</height>
        </size>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>550</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Create Preview Image</string>
+     </spacer>
+    </item>
+    <item row="5" column="1">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
-     <widget class="QPushButton" name="pushButtonUploadBkground">
+    <item row="0" column="1">
+     <widget class="QGraphicsView" name="graphicsView">
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>30</height>
+        <width>550</width>
+        <height>550</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>550</width>
-        <height>30</height>
+        <height>550</height>
        </size>
-      </property>
-      <property name="text">
-       <string>Upload Bkground Picture</string>
       </property>
      </widget>
     </item>
@@ -171,20 +143,64 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
+    <item row="2" column="1">
+     <widget class="QPushButton" name="pushButtonCreerPreview_2">
+      <property name="minimumSize">
        <size>
-        <width>20</width>
-        <height>40</height>
+        <width>0</width>
+        <height>30</height>
        </size>
       </property>
-     </spacer>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Create Preview Image</string>
+      </property>
+     </widget>
     </item>
-    <item row="0" column="0" rowspan="9">
+    <item row="6" column="1">
+     <widget class="QPushButton" name="pushButtonUploadBkground">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Upload Bkground Picture</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="pushButtonCreateIwfLz">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>550</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Build LZ-Compressed Watch Face (Experimental)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" rowspan="8">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QGroupBox" name="groupBox">
@@ -201,12 +217,22 @@
            </item>
            <item>
             <property name="text">
+             <string>IDW17</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>IDW18</string>
             </property>
            </item>
            <item>
             <property name="text">
              <string>IDW20</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ID208BT</string>
             </property>
            </item>
           </widget>
@@ -912,41 +938,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-    <item row="6" column="1">
-     <widget class="QPushButton" name="pushButtonEditBkgroundPic">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>550</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Open Bkground Corner Matcher</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QGraphicsView" name="graphicsView">
-      <property name="minimumSize">
-       <size>
-        <width>550</width>
-        <height>550</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>550</width>
-        <height>550</height>
-       </size>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>

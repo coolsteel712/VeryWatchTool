@@ -164,6 +164,8 @@ private slots:
     void populateTypeCombo();
     void onWidgetComboAddChanged(int index);
 
+    void on_actionAbout_triggered();
+
     void pushButtonEditBkgroundPic();
     void onUploadBkgroundImg();
     void on_pushButtonCreateIwfLz_clicked();
