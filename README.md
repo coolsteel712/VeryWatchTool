@@ -6,7 +6,7 @@ Create, edit, preview, and compile custom watch faces without relying on proprie
 
 ## Beta Status
 
-VeryWatchTool is currently in **Beta v0.2.5**. While most features are functional, you may encounter bugs, incomplete features, or unexpected behavior. Feedback and bug reports are welcome.
+VeryWatchTool is currently in **Beta v0.3.0**. While most features are functional, you may encounter bugs, incomplete features, or unexpected behavior. Feedback and bug reports are welcome.
 
 ## Compiling Watch Faces
 
