@@ -27,11 +27,14 @@ Currently supported:
 * Octandra IDW13
 * Yoever IDW18
 * TOOBUR IDW20
+* TOOBUR IDW17
+* Woneligo ID208BT
 
 Planned support may include additional devices such as:
 
-* TOOBUR IDW17
-* IDO ID Sport03
+* BEZT ID Sport03
+* IDO GTBand
+* AEAC ID207 (It has the watch_15 widget instead of watch widget, so adding this will take some time*)
 * Other VeryFit-compatible models
 
 ## License
