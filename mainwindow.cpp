@@ -1570,6 +1570,8 @@ QImage MainWindow::renderCustomWidgetImage(const WidgetEntry &e) const
         return QImage();
     }
 
+
+
     // ── letter widgets ────────────────────────────────────────────────────────
     static const QSet<QString> letterTypes = { "week", "month", "apm" };
     if (letterTypes.contains(typeVal)) {
@@ -1607,8 +1609,18 @@ QImage MainWindow::renderCustomWidgetImage(const WidgetEntry &e) const
                                                         {"battery",  "100%"},
                                                         {"weather",  "28"},
                                                         };
+
+    // DECLARE value FIRST (before using it)
     QString value = digitPreview.value(typeVal, "0");
 
+    // ── Special handling for battery widget ────────────────────────────────
+    // If battery widget has fontnum 10, then the battery widget renders it as 100 without the percent sign. If fontnum > 10, then it renders the percent sign as well.
+    if (typeVal == "battery" && e.json.contains("fontnum")) {
+        int fontnum = e.json["fontnum"].toInt();
+        if (fontnum <= 10) {
+            value = "100"; // omit percent sign
+        }
+    }
     // Special character → numbered image filename mapping:
     //   10 = colon (:) / slash (/) / percent (%) / period (.) / dash (-)
     //   11 = degree-Celsius  (°C, weather widget, style=2)
