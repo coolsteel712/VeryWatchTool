@@ -242,6 +242,9 @@ private:
     QJsonObject buildRootJson() const;
     void        renderWatchHands();
 
+    // 24-bit suffix handling for GTX03 device
+    bool deviceRequires24BitSuffix() const;
+
     // custom widget rendering
     bool        addCustomWidget(const QString &typeVal);
     bool        addAnimaWidget();

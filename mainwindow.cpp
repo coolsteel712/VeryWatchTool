@@ -260,13 +260,28 @@ void MainWindow::initDeviceConfigs()
 
     deviceConfigs["IDW20"] = {
         "IDW20", "IDW20", 320, 385, 160, 193, 272, 324, 67,
-        QColor(128, 128, 128), 3, 268, 320, 0.95
+        QColor(127, 127, 127), 3, 269, 321, 0.95
     };
 
     deviceConfigs["ID208BT"] = {
         "ID208BT", "ID208BT", 240, 280, 120, 140, 174, 196, 31,
         QColor(37, 37, 37), 2, 166, 194, 0.98
     };
+
+    deviceConfigs["GTX03"] = {
+        "GTX03", "GTX03", 466, 466, 233, 233, 270, 270, 270,
+        QColor(151, 151, 151), 4, 262, 262, 0.96
+    };
+
+    deviceConfigs["GTX10"] = {
+        "GTX10", "GTX10", 390, 450, 195, 225, 214, 246, 0,
+        QColor(0, 0, 0), 0, 0, 0, 1
+    };
+}
+
+bool MainWindow::deviceRequires24BitSuffix() const
+{
+    return (currentDevice.id == "GTX03" || currentDevice.id == "GTX10");
 }
 
 void MainWindow::applyDeviceConfig(const QString &modelName)
@@ -368,6 +383,11 @@ void MainWindow::onNewProject()
     root["item"]             = QJsonArray();
     root["bkground"]         = "";
 
+    // If the device is GTX03, we need to add the "_24bit" suffix to the preview image name
+    if (deviceRequires24BitSuffix()) {
+        root["preview"] = "preview_24bit.png";
+    }
+
     ui->plainTextEdit->setPlainText(prettyJson(root));
     clearScrollArea();
     rebuildCurrentWidgetCombo();
@@ -427,19 +447,36 @@ void MainWindow::onAddWidget()
 
     if (widgetKind == "watch" && typeVal == "time") {
 
-        // Line 414 - Hour hand
+        bool requires24Bit = deviceRequires24BitSuffix();
+
         ClockHandDialog hourDlg("hour", currentDevice.anchorX, currentDevice.anchorY, this);
         if (hourDlg.exec() != QDialog::Accepted) return;
 
-        // Line 417 - Minute hand
         ClockHandDialog minDlg("minute", currentDevice.anchorX, currentDevice.anchorY, this);
         if (minDlg.exec() != QDialog::Accepted) return;
 
-        // Line 420 - Second hand
         ClockHandDialog secDlg("second", currentDevice.anchorX, currentDevice.anchorY, this);
         if (secDlg.exec() != QDialog::Accepted) return;
 
-        // Copy hand images into project folder
+        // Get the file names
+        QString hourFile = hourDlg.fileName();
+        QString minFile = minDlg.fileName();
+        QString secFile = secDlg.fileName();
+
+        // Apply 24-bit suffix if needed
+        if (requires24Bit) {
+            if (!hourFile.isEmpty()) {
+                hourFile = hourFile.section('.', 0, 0) + "_24bit." + hourFile.section('.', 1);
+            }
+            if (!minFile.isEmpty()) {
+                minFile = minFile.section('.', 0, 0) + "_24bit." + minFile.section('.', 1);
+            }
+            if (!secFile.isEmpty()) {
+                secFile = secFile.section('.', 0, 0) + "_24bit." + secFile.section('.', 1);
+            }
+        }
+
+        // When copying, use the modified file names
         auto copyHand = [&](const ClockHandDialog &dlg, const QString &destName) {
             QString src = dlg.filePath();
             if (src.isEmpty()) return;
@@ -448,13 +485,9 @@ void MainWindow::onAddWidget()
             QFile::copy(src, dst);
         };
 
-        QString hourFile = hourDlg.fileName().isEmpty() ? "hour.png"   : hourDlg.fileName();
-        QString minFile  = minDlg.fileName().isEmpty()  ? "min.png"    : minDlg.fileName();
-        QString secFile  = secDlg.fileName().isEmpty()  ? "second.png" : secDlg.fileName();
-
         copyHand(hourDlg, hourFile);
-        copyHand(minDlg,  minFile);
-        copyHand(secDlg,  secFile);
+        copyHand(minDlg, minFile);
+        copyHand(secDlg, secFile);
 
         // Build JSON — exact key order from spec
         obj["widget"]      = "watch";
@@ -824,6 +857,16 @@ QJsonObject MainWindow::buildRootJson() const
         root["bkground"]         = "";
     }
 
+    // Check if the device is GTX03 and adjust the preview image name accordingly
+    if (deviceRequires24BitSuffix()) {
+        root["preview"] = "preview_24bit.png";
+    }
+
+    // If user switches device, switch it back to without the "_24bit" suffix for non-GTX03 devices
+    if (!deviceRequires24BitSuffix() && root["preview"].toString().endsWith("_24bit.png")) {
+        root["preview"] = "preview.png";
+    }
+
     QJsonArray items;
     for (const auto &e : widgetList)
         items.append(e.json);
@@ -1065,6 +1108,11 @@ void MainWindow::onUploadBkgroundImg()
     QString destName = projectOpen
                            ? QString("files%1.%2").arg(fileCounter++).arg(suffix)
                            : fileInfo.fileName();
+
+    // Check if the device requires the "_24bit" suffix and adjust the destination name accordingly
+    if (deviceRequires24BitSuffix()) {
+        destName = destName.section('.', 0, 0) + "_24bit." + suffix;
+    }
 
     if (projectOpen) {
         QString dst = projectDir + "/" + destName;
@@ -1344,6 +1392,16 @@ void MainWindow::onSavePreview()
                       currentDevice.previewCornerRadius);
     p.end();
 
+    // If the device requires the "_24bit" suffix, also save a copy as preview_24bit.png
+    if (deviceRequires24BitSuffix()) {
+        QString outPath24 = projectDir + "/preview_24bit.png";
+        if (!final.save(outPath24, "PNG")) {
+            QMessageBox::critical(this, "Error",
+                                  "Could not save preview to:\n" + outPath24);
+            return;
+        }
+    }
+
     // ── 4. Save to project directory as preview.png ───────────────────────────
     QString outPath = projectDir + "/preview.png";
     if (!final.save(outPath, "PNG")) {
@@ -1418,65 +1476,68 @@ bool MainWindow::addCustomWidget(const QString &typeVal)
     QString destFolder = projectDir + "/" + folderName;
     QDir().mkpath(destFolder);
 
-    QMap<QString, QImage> strip;
     int imageCount = 0;
     QString ext;
 
     for (const QString &src : files) {
         QFileInfo fi(src);
-        QString baseName = fi.completeBaseName(); // e.g. "0", "en_wed"
-        QString suffix   = fi.suffix().toLower();
+        QString suffix = fi.suffix().toLower();
         if (ext.isEmpty()) ext = suffix;
 
         QString dst = destFolder + "/" + fi.fileName();
         if (QFile::exists(dst)) QFile::remove(dst);
         QFile::copy(src, dst);
+        imageCount++;
+    }
 
-        QImage img(src);
-        if (!img.isNull()) {
-            strip[baseName] = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-            imageCount++;
+    // If device requires the "_24bit" suffix, rename the copied files
+    if (deviceRequires24BitSuffix()) {
+        QDir dir(destFolder);
+        QStringList imageFiles = dir.entryList(QDir::Files);
+        for (const QString &imageFile : imageFiles) {
+            QString oldPath = destFolder + "/" + imageFile;
+            QString newPath = destFolder + "/" + imageFile.section('.', 0, 0) + "_24bit." + imageFile.section('.', 1);
+            QFile::rename(oldPath, newPath);
         }
     }
 
+    // Reload the strip using your centralized function so the keys in memory match
+    QMap<QString, QImage> strip = loadImageStrip(destFolder);
+
     // ── 4. Determine preview value string for this type ───────────────────────
-    // digit-based types
     static const QMap<QString, QString> previewValues = {
-                                                         {"time",     "10:08"},
-                                                         {"hour",     "10"},
-                                                         {"hourhi",   "1"},
-                                                         {"hourlo",   "0"},
-                                                         {"min",      "08"},
-                                                         {"minhi",    "0"},
-                                                         {"minlo",    "8"},
-                                                         {"second",   "36"},
-                                                         {"date",     "24/09"},
-                                                         {"day",      "24"},
-                                                         {"year",     "2025"},
-                                                         {"step",     "23980"},
-                                                         {"calorie",  "839"},
-                                                         {"heartrate","128"},
-                                                         {"distance", "16.79"},
-                                                         {"exercise", "20"},
-                                                         {"walk",     "10"},
-                                                         {"battery",  "100%"},
-                                                         {"weather",  "28"},   // rendered without unit; unit comes from style
-                                                         // letter-based
-                                                         {"week",     "en_wed"},
-                                                         {"month",    "en_sept"},
-                                                         {"apm",      "en_am"},
+                                                         {"time",      "10:08"},
+                                                         {"hour",      "10"},
+                                                         {"hourhi",    "1"},
+                                                         {"hourlo",    "0"},
+                                                         {"min",       "08"},
+                                                         {"minhi",     "0"},
+                                                         {"minlo",     "8"},
+                                                         {"second",    "36"},
+                                                         {"date",      "24/09"},
+                                                         {"day",       "24"},
+                                                         {"year",      "2025"},
+                                                         {"step",      "23980"},
+                                                         {"calorie",   "839"},
+                                                         {"heartrate", "128"},
+                                                         {"distance",  "16.79"},
+                                                         {"exercise",  "20"},
+                                                         {"walk",      "10"},
+                                                         {"battery",   "100%"},
+                                                         {"weather",   "28"},
+                                                         {"week",      "en_wed"},
+                                                         {"month",     "en_sept"},
+                                                         {"apm",       "en_am"},
                                                          };
     QString previewVal = previewValues.value(typeVal, "0");
 
     // ── 5. Measure auto-width/height from rendered preview ────────────────────
-    // Build a temporary entry to measure
     WidgetEntry tempEntry;
     tempEntry.widgetType = "custom";
     tempEntry.typeValue  = typeVal;
     tempEntry.imageStrip = strip;
     tempEntry.fontFolder = folderName;
 
-    // Build the JSON with correct key order per spec
     QJsonObject obj;
     obj["widget"]   = "custom";
     obj["type"]     = typeVal;
@@ -1488,9 +1549,9 @@ bool MainWindow::addCustomWidget(const QString &typeVal)
 
     if (typeVal == "distance") obj["metricinch"] = 1;
     if (typeVal == "weather")  obj["style"]      = 2;
-    if (typeVal == "date")  obj["style"]      = 1;
-    if (typeVal == "week") obj["style"] = 0;
-    if (typeVal == "month") obj["style"] = 0;
+    if (typeVal == "date")     obj["style"]      = 1;
+    if (typeVal == "week")    obj["style"]      = 0;
+    if (typeVal == "month")   obj["style"]      = 0;
 
     obj["font"]    = folderName;
     obj["fontnum"] = imageCount;
@@ -1504,7 +1565,6 @@ bool MainWindow::addCustomWidget(const QString &typeVal)
     tempEntry.json = obj;
 
     // ── 6. Update font.json ───────────────────────────────────────────────────
-    // Add entry if not already present (matched by name)
     bool fontExists = false;
     for (int fi = 0; fi < fontJsonItems.size(); ++fi) {
         if (fontJsonItems[fi].toObject()["name"].toString() == folderName) {
@@ -1555,22 +1615,30 @@ QImage MainWindow::renderCustomWidgetImage(const WidgetEntry &e) const
     const QString &typeVal = e.typeValue;
     const QMap<QString, QImage> &strip = e.imageStrip;
 
+    // Helper to format keys correctly if GTX03/24bit suffix is required
+    auto getKey = [this](const QString &baseKey) -> QString {
+        if (deviceRequires24BitSuffix() && !baseKey.endsWith("_24bit", Qt::CaseInsensitive)) {
+            return baseKey + "_24bit";
+        }
+        return baseKey;
+    };
+
     // ── anima widget: display first frame as static image ────────────────────
     if (typeVal == "anima") {
         // Frames are named 0.png, 1.png … pick frame 0 as static preview
-        if (strip.contains("0")) return strip["0"];
+        QString key0 = getKey("0");
+        if (strip.contains(key0)) return strip[key0];
         if (!strip.isEmpty())    return strip.first();
         return QImage();
     }
 
     // ── icon widget: display bg image as static image ─────────────────────────
     if (typeVal == "icon") {
-        if (strip.contains("__icon__")) return strip["__icon__"];
-        if (!strip.isEmpty())           return strip.first();
+        QString iconKey = getKey("__icon__");
+        if (strip.contains(iconKey)) return strip[iconKey];
+        if (!strip.isEmpty())        return strip.first();
         return QImage();
     }
-
-
 
     // ── letter widgets ────────────────────────────────────────────────────────
     static const QSet<QString> letterTypes = { "week", "month", "apm" };
@@ -1580,7 +1648,7 @@ QImage MainWindow::renderCustomWidgetImage(const WidgetEntry &e) const
                                                              {"month", "en_sept"},
                                                              {"apm",   "en_am"},
                                                              };
-        QString key = letterPreview.value(typeVal, "");
+        QString key = getKey(letterPreview.value(typeVal, ""));
         if (strip.contains(key)) return strip[key];
         // fallback: return first image found
         if (!strip.isEmpty()) return strip.first();
@@ -1589,42 +1657,38 @@ QImage MainWindow::renderCustomWidgetImage(const WidgetEntry &e) const
 
     // ── digit widgets ─────────────────────────────────────────────────────────
     static const QMap<QString, QString> digitPreview = {
-                                                        {"time",     "10:08"},
-                                                        {"hour",     "10"},
-                                                        {"hourhi",   "1"},
-                                                        {"hourlo",   "0"},
-                                                        {"min",      "08"},
-                                                        {"minhi",    "0"},
-                                                        {"minlo",    "8"},
-                                                        {"second",   "36"},
-                                                        {"date",     "24/09"},
-                                                        {"day",      "24"},
-                                                        {"year",     "2025"},
-                                                        {"step",     "23980"},
-                                                        {"calorie",  "839"},
-                                                        {"heartrate","128"},
-                                                        {"distance", "16.79"},
-                                                        {"exercise", "20"},
-                                                        {"walk",     "10"},
-                                                        {"battery",  "100%"},
-                                                        {"weather",  "28"},
+                                                        {"time",      "10:08"},
+                                                        {"hour",      "10"},
+                                                        {"hourhi",    "1"},
+                                                        {"hourlo",    "0"},
+                                                        {"min",       "08"},
+                                                        {"minhi",     "0"},
+                                                        {"minlo",     "8"},
+                                                        {"second",    "36"},
+                                                        {"date",      "24/09"},
+                                                        {"day",       "24"},
+                                                        {"year",      "2025"},
+                                                        {"step",      "23980"},
+                                                        {"calorie",   "839"},
+                                                        {"heartrate", "128"},
+                                                        {"distance",  "16.79"},
+                                                        {"exercise",  "20"},
+                                                        {"walk",      "10"},
+                                                        {"battery",   "100%"},
+                                                        {"weather",   "28"},
                                                         };
 
     // DECLARE value FIRST (before using it)
     QString value = digitPreview.value(typeVal, "0");
 
     // ── Special handling for battery widget ────────────────────────────────
-    // If battery widget has fontnum 10, then the battery widget renders it as 100 without the percent sign. If fontnum > 10, then it renders the percent sign as well.
     if (typeVal == "battery" && e.json.contains("fontnum")) {
         int fontnum = e.json["fontnum"].toInt();
         if (fontnum <= 10) {
             value = "100"; // omit percent sign
         }
     }
-    // Special character → numbered image filename mapping:
-    //   10 = colon (:) / slash (/) / percent (%) / period (.) / dash (-)
-    //   11 = degree-Celsius  (°C, weather widget, style=2)
-    //   12 = degree-Fahrenheit (°F, weather widget, style other)
+
     static const QMap<QChar, QString> specialMap = {
         {QChar(':'),    "10"},
         {QChar('/'),    "10"},
@@ -1653,15 +1717,17 @@ QImage MainWindow::renderCustomWidgetImage(const WidgetEntry &e) const
     int totalW = 0, maxH = 0;
 
     for (QChar ch : renderValue) {
-        QString key;
+        QString rawKey;
         if (ch.isDigit())
-            key = QString(ch);
+            rawKey = QString(ch);
         else if (weatherMap.contains(ch))
-            key = weatherMap[ch];
+            rawKey = weatherMap[ch];
         else if (specialMap.contains(ch))
-            key = specialMap[ch];
+            rawKey = specialMap[ch];
         else
             continue;
+
+        QString key = getKey(rawKey);
 
         auto it = strip.find(key);
         if (it != strip.end()) {
@@ -1686,13 +1752,12 @@ QImage MainWindow::renderCustomWidgetImage(const WidgetEntry &e) const
     int canvasW = std::max(totalW, e.json.contains("w") ? e.json["w"].toInt() : 0);
     if (canvasW <= 0) canvasW = totalW;
 
-    // Calculate x offset for alignment (mirrors the Python logic exactly)
+    // Calculate x offset for alignment
     int xpos = 0;
     if (align == "center")
         xpos = (canvasW - totalW) / 2;
     else if (align == "right")
         xpos = canvasW - totalW;
-    // "left" → xpos stays 0
 
     // Create the final image with proper alignment
     QImage result(canvasW, maxH, QImage::Format_ARGB32_Premultiplied);
@@ -2033,6 +2098,21 @@ bool MainWindow::addAnimaWidget()
         "", "Images (*.png *.bmp)");
     if (files.isEmpty()) return false;
 
+    // If device requires the "_24bit" suffix, rename the copied files to include "_24bit" before the extension.
+    if (deviceRequires24BitSuffix()) {
+        for (QString &srcPath : files) {
+            QFileInfo fi(srcPath);
+            QString baseName = fi.completeBaseName();
+            QString ext = fi.suffix();
+            QString newFileName = baseName + "_24bit." + ext;
+            QString newPath = fi.absolutePath() + "/" + newFileName;
+            if (!QFile::exists(newPath)) {
+                QFile::rename(srcPath, newPath);
+                srcPath = newPath; // Update the path in the list
+            }
+        }
+    }
+
     // ── 3. Copy frames into project subfolder ─────────────────────────────────
     QString destFolder = projectDir + "/" + folderName;
     QDir().mkpath(destFolder);
@@ -2136,6 +2216,21 @@ bool MainWindow::addRedpointWidget()
         "", "Images (*.png *.bmp)");
     if (files.isEmpty()) return false;
 
+    // If device requires the "_24bit" suffix, rename the copied files to include "_24bit" before the extension.
+    if (deviceRequires24BitSuffix()) {
+        for (QString &srcPath : files) {
+            QFileInfo fi(srcPath);
+            QString baseName = fi.completeBaseName();
+            QString ext = fi.suffix();
+            QString newFileName = baseName + "_24bit." + ext;
+            QString newPath = fi.absolutePath() + "/" + newFileName;
+            if (!QFile::exists(newPath)) {
+                QFile::rename(srcPath, newPath);
+                srcPath = newPath; // Update the path in the list
+            }
+        }
+    }
+
     // ── 3. Copy images into project subfolder ──────────────────────────────────
     QString destFolder = projectDir + "/" + folderName;
     QDir().mkpath(destFolder);
@@ -2226,6 +2321,19 @@ bool MainWindow::addIconWidget()
 
     QFileInfo fi(srcPath);
     QString fileName = fi.fileName();
+
+    // If device requires the "_24bit" suffix, rename the copied files to include "_24bit" before the extension.
+    if (deviceRequires24BitSuffix()) {
+        QString baseName = fi.completeBaseName();
+        QString ext = fi.suffix();
+        QString newFileName = baseName + "_24bit." + ext;
+        QString newPath = fi.absolutePath() + "/" + newFileName;
+        if (!QFile::exists(newPath)) {
+            QFile::rename(srcPath, newPath);
+            srcPath = newPath;
+            fileName = newFileName;
+        }
+    }
 
     // ── 2. Copy to project root ───────────────────────────────────────────────
     QString dst = projectDir + "/" + fileName;
